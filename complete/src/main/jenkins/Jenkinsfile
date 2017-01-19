@@ -21,7 +21,7 @@ node {
             def pom = readMavenPom file: 'pom.xml'
             pom.version = version
             writeMavenPom model: pom
-            sh "mvn clean install docker:build -DpushImageTags -DdockerImageTags=" + version + " -DpushImage"
+            sh "mvn -e clean install docker:build -DdockerImageTags=" + version + " -DpushImage"
         }
     }
 
