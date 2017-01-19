@@ -12,29 +12,17 @@ node {
                     [$class: 'TextParameterDefinition', defaultValue: '0.0.1', name: 'Version']
             ])
         }
-
-        echo ("Branch: " + userInput['Branch'])
-        echo ("Version: " + userInput['Version'])
     }
 
     stage ('Checkout and Build') {
         git url: "https://github.com/svenjohann/gs-spring-boot-docker.git", branch: userInput['Branch'], credentialsId: '5c669a2d-fcc8-48cc-8f35-a000a6267788'
-        sh "cd complete"
-        sh "mvn clean install docker:build"
-    }
-
-    stage ('Deploy to UAT') {
-        echo 'Dummy deploying to UAT'
-    }
-
-    stage ('Wait for approval') {
-        timeout(time:4, unit:'HOURS') {
-            input(
-                    id: 'approval', message: 'Approve to production', submitter: 'admin,ProdDeployer')
+        def version = userInput['Version']
+        dir ("complete") {
+            def pom = readMavenPom file: 'pom.xml'
+            pom.version = version
+            writeMavenPom model: pom
+            sh "mvn clean install docker:build -DpushImageTags -DdockerImageTags=" + version + " -DpushImage"
         }
     }
 
-    stage ('Deploy to production') {
-        echo 'Dummy deploying to production'
-    }
 }
