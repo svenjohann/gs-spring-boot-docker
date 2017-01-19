@@ -1,0 +1,39 @@
+node {
+
+    def userInput
+
+    stage ('Setup') {
+        echo 'Creating a new release'
+
+        timeout(time:60, unit:'SECONDS') {
+            userInput = input(
+                    id: 'userInput', message: 'Create a new release', parameters: [
+                    [$class: 'TextParameterDefinition', defaultValue: 'master', name: 'Branch'],
+                    [$class: 'TextParameterDefinition', defaultValue: '0.0.1', name: 'Version']
+            ])
+        }
+
+        echo ("Branch: " + userInput['Branch'])
+        echo ("Version: " + userInput['Version'])
+    }
+
+    stage ('Checkout and Build') {
+        git url: "https://gitlab.innoq.com/dz-privatbank/aaaAdapter.git", branch: userInput['Branch'], credentialsId: '2fce9946-1d8f-440d-9695-e5132de9de1b'
+        sh "mvn clean install docker:build"
+    }
+
+    stage ('Deploy to UAT') {
+        echo 'Dummy deploying to UAT'
+    }
+
+    stage ('Wait for approval') {
+        timeout(time:4, unit:'HOURS') {
+            input(
+                    id: 'approval', message: 'Approve to production', submitter: 'admin,ProdDeployer')
+        }
+    }
+
+    stage ('Deploy to production') {
+        echo 'Dummy deploying to production'
+    }
+}
