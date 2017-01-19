@@ -18,8 +18,8 @@ node {
     }
 
     stage ('Checkout and Build') {
-        git url: "https://gitlab.innoq.com/dz-privatbank/aaaAdapter.git", branch: userInput['Branch'], credentialsId: '2fce9946-1d8f-440d-9695-e5132de9de1b'
-        sh "mvn clean install docker:build"
+        git url: "https://github.com/svenjohann/gs-spring-boot-docker.git", branch: userInput['Branch'], credentialsId: '2fce9946-1d8f-440d-9695-e5132de9de1b'
+        sh "mvn -f complete/pom.xml clean install docker:build"
     }
 
     stage ('Deploy to UAT') {
