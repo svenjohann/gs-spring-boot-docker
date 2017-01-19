@@ -9,6 +9,7 @@
     <version>0.0.1</version>
     <packaging>jar</packaging>
     <name>Spring Boot Docker</name>
+
     <description>Getting started with Spring Boot and Docker</description>
 
     <parent>
@@ -24,10 +25,22 @@
     </properties>
 
     <build>
+        <finalName>${project.artifactId}</finalName>
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
+
+                <!--<executions>-->
+                    <!--<execution>-->
+                        <!--<goals>-->
+                            <!--<goal>repackage</goal>-->
+                        <!--</goals>-->
+                        <!--<configuration>-->
+                            <!--<finalName>${project.artifactId}.jar</finalName>-->
+                        <!--</configuration>-->
+                    <!--</execution>-->
+                <!--</executions>-->
             </plugin>
             <plugin>
                 <groupId>com.spotify</groupId>
